@@ -3,7 +3,6 @@ package swagger
 import (
 	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/boltdb/bolt"
@@ -25,28 +24,28 @@ func traversal() {
 	defer db.Close()
 }
 
-func GetPlanetByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "planets")
+func GetPlanetByID(id string) string {
+	return queryInformation(id, "planets")
 }
 
-func GetStarshipByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "starships")
+func GetStarshipByID(id string) string {
+	return queryInformation(id, "starships")
 }
 
-func GetFilmByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "films")
+func GetFilmByID(id string) string {
+	return queryInformation(id, "films")
 }
 
-func GetSpeciesByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "species")
+func GetSpeciesByID(id string) string {
+	return queryInformation(id, "species")
 }
 
-func GetVehicleByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "vehicles")
+func GetVehicleByID(id string) string {
+	return queryInformation(id, "vehicles")
 }
 
-func GetPeopleByID(id int) string {
-	return queryInformation(strconv.Itoa(id), "people")
+func GetPeopleByID(id string) string {
+	return queryInformation(id, "people")
 }
 
 func queryInformation(index string, bucketName string) string {
@@ -62,7 +61,7 @@ func queryInformation(index string, bucketName string) string {
 		b := tx.Bucket([]byte(bucketName))
 		v := b.Get([]byte(index))
 		result = string(v[:])
-		fmt.Println(result)
+		// fmt.Println(result)
 		return nil
 	}); err != nil {
 		log.Fatal("view error :", err.Error())
@@ -170,6 +169,7 @@ func initDB() {
 	}
 
 }
+
 func insertFunction(str1 string, str2 string, bucketName string) {
 	db, err := bolt.Open("db/my.db", 0600, nil)
 	if err != nil {

@@ -1,0 +1,48 @@
+.sign {
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 50px;
+    border-radius: 2%;
+}
+
+.el-card {
+    border-radius: 2%;
+}
+
+.header {
+    max-height: 100px;
+}
+
+.el-card .header > img {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.el-card__body {
+    padding-bottom: 0;
+}
+
+.slide-fade-enter-active{
+    -webkit-transition: all .2s ease !important;
+    transition: all .2s ease !important;
+}
+
+.slide-fade-leave-active{
+    -webkit-transition: all .2s ease !important;
+    transition: all .2s ease !important;
+}
+.slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */ {
+    transform: scaleY(0) !important;
+    margin: 0 !important;
+    max-height: 0;
+    background-color: black;
+}
+
+.el-button {
+    width: 47.5%;
+}
+
+.visitor {
+    width: 100%;
+}

@@ -1,0 +1,28 @@
+.profile-card {
+    width: 600px;
+    margin: 0 auto;
+    margin-top: 50px;
+    border-radius: 2%;
+}
+
+.profile-card .header {
+    max-height: 50px;
+    display: inline;
+}
+
+.profile-card .el-row {
+    height: 50px;
+}
+
+.profile-card .name {
+    height: 85px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.profile-card .header img {
+    max-height: 100px;
+    margin: 0 auto;
+    background: #00000022;
+    border-radius: 50%;
+}

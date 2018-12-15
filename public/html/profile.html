@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+    <link rel="shortcut icon" type="image/jpg" href="../img/favicon.png">
+
+    <!-- Link Library-->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="profile">
+        <el-container class="is-vertical">
+            <my-header></my-header>
+            <el-main class="profile-card">
+                <el-card>
+                    <div slot="header" class="header">
+                        <el-row>
+                            <img src="../img/user.png">
+                        </el-row>
+                        <el-row class="name">
+                            <span>{{ form.username }}</span>
+                        </el-row>
+                    </div>
+                    <el-form ref="form" :model="form" :label-position="labelPosition" label-width="150px">
+                        <el-form-item label="Old Password">
+                            <el-input type="password" v-model="form.oldPsd" placeholder="Old Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
+                        </el-form-item>
+                        <el-form-item label="New Password">
+                            <el-input type="password" v-model="form.password" placeholder="New Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Confirm Password">
+                            <el-input type="password" v-model="form.confirmPsd" placeholder="Confirm Password" prefix-icon="iconfont icon-password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="E-mail">
+                            <el-input v-model="form.email" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
+                        </el-form-item>
+                        <el-form-item label-width="0">
+                            <el-button round type="primary" @click="onSubmit">Upload Profile</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-form ref="form" :model="form" :label-position="labelPosition" label-width="150px">
+                        <el-form-item label="Old Password">
+                            <el-input type="password" v-model="form.oldPsd" placeholder="Old Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
+                        </el-form-item>
+                        <el-form-item label="New Password">
+                            <el-input type="password" v-model="form.password" placeholder="New Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Confirm Password">
+                            <el-input type="password" v-model="form.confirmPsd" placeholder="Confirm Password" prefix-icon="iconfont icon-password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="E-mail">
+                            <el-input v-model="form.email" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
+                        </el-form-item>
+                        <el-form-item label-width="0">
+                            <el-button round type="primary" @click="onSubmit">Upload Profile</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-main>
+        </el-container>
+        <my-footer></my-footer>
+    </div>
+</body>
+
+<!-- Personal Library -->
+<link rel="stylesheet" type="text/css" href="../css/global.css">
+<link rel="stylesheet" type="text/css" href="../css/profile.css">
+<link rel="stylesheet" type="text/css" href="../img/icon/iconfont.css">
+<script src="../js/global.js"></script>
+<script src="../js/profile.js"></script>
+</html>

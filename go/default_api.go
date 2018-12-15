@@ -11,6 +11,7 @@ package swagger
 
 import (
 	"net/http"
+	"strings"
 
 	db "github.com/S-Vanguard/StarWar_Server/db"
 )
@@ -22,7 +23,15 @@ func FilmsGet(w http.ResponseWriter, r *http.Request) {
 
 func FilmsIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	id := strings.Trim(r.URL.Path, "/films/")
+	json := db.GetFilmByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
 }
 
 func PeopleGet(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +41,15 @@ func PeopleGet(w http.ResponseWriter, r *http.Request) {
 
 func PeopleIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	id := strings.Trim(r.URL.Path, "/people/")
+	json := db.GetPeopleByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
 }
 
 func PlanetsGet(w http.ResponseWriter, r *http.Request) {
@@ -42,9 +59,15 @@ func PlanetsGet(w http.ResponseWriter, r *http.Request) {
 
 func PlanetsIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	json := db.GetPlanetByID(1)
-	w.Write([]byte(json))
+	id := strings.Trim(r.URL.Path, "/planets/")
+	json := db.GetPlanetByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
 }
 
 func SpeciesGet(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +77,15 @@ func SpeciesGet(w http.ResponseWriter, r *http.Request) {
 
 func SpeciesIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	id := strings.Trim(r.URL.Path, "/species/")
+	json := db.GetSpeciesByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
 }
 
 func StarshipsGet(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +95,33 @@ func StarshipsGet(w http.ResponseWriter, r *http.Request) {
 
 func StarshipsIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	id := strings.Trim(r.URL.Path, "/starships/")
+	json := db.GetStarshipByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
+}
+
+func VehiclesGet(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
+}
+
+func VehiclesIdGet(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	id := strings.Trim(r.URL.Path, "/vehicles/")
+	json := db.GetVehicleByID(id)
+	if json == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 Not found"))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(json))
+	}
 }
 
 func UserLogoutPost(w http.ResponseWriter, r *http.Request) {
@@ -83,16 +140,6 @@ func UserSignUpPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserUpdatePost(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-}
-
-func VehiclesGet(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-}
-
-func VehiclesIdGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 }

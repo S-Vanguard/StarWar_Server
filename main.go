@@ -21,5 +21,7 @@ func main() {
 
 	router := sw.NewRouter()
 
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("public"))))
+
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

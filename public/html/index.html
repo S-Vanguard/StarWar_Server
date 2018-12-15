@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Index</title>
+    <link rel="shortcut icon" type="image/png" href="../img/favicon.png"/>
+
+    <!-- Link Library-->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="main">
+        <el-container class="is-vertical">
+            <my-header></my-header>
+            <el-main class="sign">
+                <el-card>
+                    <div slot="header" class="header">
+                        <img src="../img/background.png">
+                    </div>
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <el-form-item label-width="0">
+                            <el-input v-model="form.username" placeholder="Username" prefix-icon="iconfont icon-user"></el-input>
+                        </el-form-item>
+                        <el-form-item label-width="0">
+                            <el-input type="password" v-model="form.password" placeholder="Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
+                        </el-form-item>
+                        <transition name="slide-fade">
+                            <el-form-item id="test" v-show="isSignUp" label-width="0">
+                                <el-input type="password" v-model="form.confirmPsd" placeholder="Confirm Password" prefix-icon="iconfont icon-password"></el-input>
+                            </el-form-item>
+                        </transition>
+                        <transition name="slide-fade">
+                            <el-form-item id="test" v-show="isSignUp" label-width="0">
+                                <el-input v-model="form.email" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
+                            </el-form-item>
+                        </transition>
+                        <el-form-item label-width="0">
+                            <el-button round type="primary" @click="onSubmit">{{ isSignUp ? "Sign Up" : "Sign In" }}</el-button>
+                            <el-button round @click="onExchange">{{ isSignUp ? "Sign In" : "Sign Up" }}</el-button>
+                        </el-form-item>
+                        <el-form-item label-width="0">
+                            <el-button round class="visitor" type="info" @click="toVisitor">Visitor</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-main>
+        </el-container>
+        <my-footer></my-footer>
+    </div>
+</body>
+
+<!-- Personal Library -->
+<link rel="stylesheet" type="text/css" href="../css/global.css">
+<link rel="stylesheet" type="text/css" href="../css/index.css">
+<link rel="stylesheet" type="text/css" href="../img/icon/iconfont.css">
+<script src="../js/global.js"></script>
+<script src="../js/index.js"></script>
+</html>

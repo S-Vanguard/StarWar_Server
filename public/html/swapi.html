@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SWAPI</title>
+    <link rel="shortcut icon" type="image/png" href="../img/favicon.png">
+
+    <!-- Link Library-->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="api">
+        <el-container>
+            <el-header>
+                <el-row :gutter="20" type="flex" justify="space-between" align="center">
+                    <el-col :span="2">
+                        <img class="header" src="../img/logo.png">
+                    </el-col>
+                    <el-col :span="3">
+                        <p v-if="username == ''">
+                            <el-button round type="primary" @click="toIndex">Sign Up</el-button>
+                        </p>
+                        <p v-else>
+                            Welcome, <span class="user" @click="toProfile">{{ username }}</span>        
+                        </p>
+                    </el-col>
+                </el-row>
+            </el-header>
+            <el-main class="search">
+                <el-input placeholder="请输入内容" v-model="input">
+                    <template slot="prepend">Http://</template>
+                    <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+                <el-card>
+                    <el-tabs :tab-position="tabPosition" style="height: 200px;">
+                        <el-tab-pane label="JSON">JSON 文件</el-tab-pane>
+                        <el-tab-pane label="SCHEMA">JSON 解析</el-tab-pane>
+                    </el-tabs>
+                </el-card>
+            </el-main>
+        </el-container>
+        <my-footer></my-footer>
+    </div>
+</body>
+
+<!-- Personal Library -->
+<link rel="stylesheet" type="text/css" href="../css/global.css">
+<link rel="stylesheet" type="text/css" href="../css/swapi.css">
+<link rel="stylesheet" type="text/css" href="../img/icon/iconfont.css">
+<script src="../js/global.js"></script>
+<script src="../js/swapi.js"></script>
+</html>

@@ -1,0 +1,15 @@
+.el-header .el-row {
+    width: 100%;
+}
+
+.el-header p {
+    margin: 0 auto;
+}
+
+.el-main {
+    line-height: 100px;
+    width: 900px;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding-top: 0;
+}
