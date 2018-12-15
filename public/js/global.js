@@ -16,12 +16,12 @@ Vue.component('my-header', {
 Vue.component('my-footer', {
     data: function() {
         return  {
-            copyright: 'Copyright © 2018 ServiceComputingVanguard. All rights reserved.',
+            copyright: 'Copyright © 2018 S-Vanguard. All rights reserved.',
         }
     },
     methods: {
         toGithub: function() {
-            window.location.href = 'https://github.com/ServiceComputingVanguard';
+            window.location.href = 'https://github.com/S-Vanguard';
         },
     },
     template: '\

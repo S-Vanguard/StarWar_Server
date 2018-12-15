@@ -13,3 +13,22 @@
     margin-top: 50px;
     padding-top: 0;
 }
+
+.parsed-table-expand .el-form-item__label{
+    width: 100%;
+    font-weight: bold;
+    font-size: 15px;
+    color: #99a9bf;
+}
+
+.parsed-table-expand .el-form-item {
+    line-height: normal;
+    width: 48%;
+    margin: 0;
+}
+
+.el-table th.is-leaf {
+    line-height: normal;
+    font-weight: bold;
+    color: black;
+}

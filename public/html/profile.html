@@ -9,8 +9,8 @@
 
     <!-- Link Library-->
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
 </head>
 <body>
     <div id="profile">
@@ -37,24 +37,7 @@
                             <el-input type="password" v-model="form.confirmPsd" placeholder="Confirm Password" prefix-icon="iconfont icon-password"></el-input>
                         </el-form-item>
                         <el-form-item label="E-mail">
-                            <el-input v-model="form.email" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
-                        </el-form-item>
-                        <el-form-item label-width="0">
-                            <el-button round type="primary" @click="onSubmit">Upload Profile</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-form ref="form" :model="form" :label-position="labelPosition" label-width="150px">
-                        <el-form-item label="Old Password">
-                            <el-input type="password" v-model="form.oldPsd" placeholder="Old Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
-                        </el-form-item>
-                        <el-form-item label="New Password">
-                            <el-input type="password" v-model="form.password" placeholder="New Password" prefix-icon="iconfont icon-confirm-psd"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Confirm Password">
-                            <el-input type="password" v-model="form.confirmPsd" placeholder="Confirm Password" prefix-icon="iconfont icon-password"></el-input>
-                        </el-form-item>
-                        <el-form-item label="E-mail">
-                            <el-input v-model="form.email" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
+                            <el-input v-model="form.email" @change="mailChange" placeholder="Email" prefix-icon="iconfont icon-mail"></el-input>
                         </el-form-item>
                         <el-form-item label-width="0">
                             <el-button round type="primary" @click="onSubmit">Upload Profile</el-button>

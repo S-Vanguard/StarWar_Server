@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,33 +13,235 @@
     <script src="https://unpkg.com/element-ui@2.4.11/lib/index.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
     <div id="api">
         <el-container>
-            <el-header>
+            <el-header v-loading.fullscreen.lock="loadingUser">
                 <el-row :gutter="20" type="flex" justify="space-between" align="center">
                     <el-col :span="2">
                         <img class="header" src="../img/logo.png">
                     </el-col>
                     <el-col :span="3">
-                        <p v-if="username == ''">
+                        <p v-if="username === ''">
                             <el-button round type="primary" @click="toIndex">Sign Up</el-button>
                         </p>
                         <p v-else>
-                            Welcome, <span class="user" @click="toProfile">{{ username }}</span>        
+                            Welcome, <span class="user" @click="toProfile">{{ username }}</span>
                         </p>
                     </el-col>
                 </el-row>
             </el-header>
             <el-main class="search">
                 <el-input placeholder="请输入内容" v-model="input">
-                    <template slot="prepend">Http://</template>
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <template slot="prepend">{{ currentHost }}</template>
+                    <el-button slot="append" icon="el-icon-search" @click="onSearch"></el-button>
                 </el-input>
-                <el-card>
-                    <el-tabs :tab-position="tabPosition" style="height: 200px;">
-                        <el-tab-pane label="JSON">JSON 文件</el-tab-pane>
-                        <el-tab-pane label="SCHEMA">JSON 解析</el-tab-pane>
+                <el-card v-loading="loadingJSON">
+                    <el-tabs :tab-position="tabPosition" style="min-height: 200px;" v-model="selectedTab">
+                        <el-tab-pane label="JSON" name="json">
+                            <el-input type="textarea" disabled autosize placeholder="请输入内容" v-model="jsonSource" style="min-height: 150px;"></el-input>
+                        </el-tab-pane>
+                        <el-tab-pane label="SCHEMA" name="schema">
+                            <span v-if="isJSONParsed === false || apiType === 0" style="color: #eeeeee;text-shadow: 1px 1px 1px gray;">{{ parsingErrorMsg }}</span>
+                            <el-table v-else :data="parsedJSONTable" style="width: 100%">
+                                <el-table-column v-if="apiType === 1" type="expand">
+                                    <!--people-->
+                                    <el-form slot-scope="props" label-position="left" inline class="parsed-table-expand">
+                                        <el-form-item label="Name">
+                                            <span>{{ props.row.name }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Height">
+                                            <span>{{ props.row.height }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Mass">
+                                            <span>{{ props.row.mass }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Hair">
+                                            <span>{{ props.row.hair_color }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Skin">
+                                            <span>{{ props.row.skin_color }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Eye">
+                                            <span>{{ props.row.eye_color }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Birth year">
+                                            <span>{{ props.row.birth_year }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Gender">
+                                            <span>{{ props.row.gender }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Homeworld">
+                                            <a v-bind:href="props.row.model">{{ props.row.model }}</a>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <a v-bind:href="props.row.url">{{ props.row.url }}</a>
+                                        </el-form-item>
+                                        <el-form-item label="Created">
+                                            <span>{{ props.row.created }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Edited">
+                                            <span>{{ props.row.edited }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Films">
+                                            <ul>
+                                                <li v-for="film in props.row.films">
+                                                    <a v-bind:href="film">{{ film }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Species">
+                                            <ul>
+                                                <li v-for="specie in props.row.species">
+                                                    <a v-bind:href="specie">{{ specie }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Vehicles">
+                                            <ul>
+                                                <li v-for="vehicle in props.row.vehicles">
+                                                    <a v-bind:href="vehicle">{{ vehicle }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Starships">
+                                            <ul>
+                                                <li v-for="starship in props.row.starships">
+                                                    <a v-bind:href="starship">{{ starship }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-table-column>
+                                <el-table-column v-else-if="apiType === 2" type="expand">
+                                    <!--planets-->
+                                    <el-form slot-scope="props" label-position="left" inline class="parsed-table-expand">
+                                        <el-form-item label="Name">
+                                            <span>{{ props.row.name }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <span>{{ props.row.url }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Films">
+                                            <ul>
+                                                <li v-for="film in props.row.films">
+                                                    <a v-bind:href="film">{{ film }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Films">
+                                            <ul>
+                                                <li v-for="film in props.row.films">
+                                                    <a v-bind:href="film">{{ film }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <a v-bind:href="props.row.url">{{ props.row.url }}</a>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-table-column>
+                                <el-table-column v-else type="expand">
+                                    <!--starship-->
+                                    <el-form slot-scope="props" label-position="left" inline class="parsed-table-expand">
+                                        <el-form-item label="Name">
+                                            <span>{{ props.row.name }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Model">
+                                            <span>{{ props.row.model }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Manufacturer">
+                                            <span>{{ props.row.manufacturer }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Cost">
+                                            <span>{{ props.row.cost_in_credits }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Length">
+                                            <span>{{ props.row.length }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Speed">
+                                            <span>{{ props.row.max_atmosphering_speed }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Crew">
+                                            <span>{{ props.row.crew }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Passengers">
+                                            <span>{{ props.row.passengers }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Capacity">
+                                            <span>{{ props.row.cargo_capacity }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Consumables">
+                                            <span>{{ props.row.consumables }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Hyperdrive">
+                                            <span>{{ props.row.hyperdrive_rating }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="MGLT">
+                                            <span>{{ props.row.MGLT }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Class">
+                                            <span>{{ props.row.starship_class }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Url">
+                                            <a v-bind:href="props.row.url">{{ props.row.url }}</a>
+                                        </el-form-item>
+                                        <el-form-item label="Created">
+                                            <span>{{ props.row.created }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Edited">
+                                            <span>{{ props.row.edited }}</span>
+                                        </el-form-item>
+                                        <el-form-item label="Pilots">
+                                            <ul>
+                                                <li v-for="pilot in props.row.pilots">
+                                                    <a v-bind:href="pilot">{{ pilot }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Films">
+                                            <ul>
+                                                <li v-for="film in props.row.films">
+                                                    <a v-bind:href="film">{{ film }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-table-column>
+                                <el-table-column label="Name" prop="name">
+                                </el-table-column>
+                                <el-table-column label="Url" prop="url">
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
                     </el-tabs>
                 </el-card>
             </el-main>
@@ -53,4 +256,5 @@
 <link rel="stylesheet" type="text/css" href="../img/icon/iconfont.css">
 <script src="../js/global.js"></script>
 <script src="../js/swapi.js"></script>
+
 </html>

@@ -49,7 +49,7 @@ let main = new Vue({
                     if (response.data.status === "OK") {
                         this.$message.success("Signed in successfully");
                         setTimeout(()=>{
-                            window.location.href = "/public/html/swapi.html";
+                            window.location.href = "/html/swapi.html";
                         }, 3000)
                     } else {
                         if (response.data.message !== undefined) {
@@ -68,7 +68,7 @@ let main = new Vue({
             this.isSignUp = !this.isSignUp;
         },
         toVisitor: function() {
-            window.location.href = '/public/html/swapi.html';
+            window.location.href = '/html/swapi.html';
         },
         check: function() {
             if (this.form.username === "") {
