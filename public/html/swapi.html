@@ -38,7 +38,7 @@
                     <el-button slot="append" icon="el-icon-search" @click="onSearch"></el-button>
                 </el-input>
                 <el-card v-loading="loadingJSON">
-                    <el-tabs :tab-position="tabPosition" style="min-height: 200px;" v-model="selectedTab">
+                    <el-tabs :tab-position="tabPosition" style="min-height: 200px;" v-model="selectedTab" @tab-click="handleTabSwitch">
                         <el-tab-pane label="JSON" name="json">
                             <el-input type="textarea" disabled autosize placeholder="请输入内容" v-model="jsonSource" style="min-height: 150px;"></el-input>
                         </el-tab-pane>
@@ -120,52 +120,52 @@
                                         <el-form-item label="Name">
                                             <span>{{ props.row.name }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Rotation Period">
+                                            <span>{{ props.row.rotation_period }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Orbital Period">
+                                            <span>{{ props.row.orbital_period }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Diameter">
+                                            <span>{{ props.row.diameter }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Climate">
+                                            <span>{{ props.row.climate }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Gravity">
+                                            <span>{{ props.row.gravity }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Terrain">
+                                            <span>{{ props.row.terrain }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Surface Water">
+                                            <span>{{ props.row.surface_water }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Population">
+                                            <span>{{ props.row.population }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
+                                        <el-form-item label="Created">
+                                            <span>{{ props.row.created }}</span>
                                         </el-form-item>
-                                        <el-form-item label="Url">
-                                            <span>{{ props.row.url }}</span>
-                                        </el-form-item>
-                                        <el-form-item label="Films">
-                                            <ul>
-                                                <li v-for="film in props.row.films">
-                                                    <a v-bind:href="film">{{ film }}</a>
-                                                </li>
-                                            </ul>
-                                        </el-form-item>
-                                        <el-form-item label="Films">
-                                            <ul>
-                                                <li v-for="film in props.row.films">
-                                                    <a v-bind:href="film">{{ film }}</a>
-                                                </li>
-                                            </ul>
+                                        <el-form-item label="Edited">
+                                            <span>{{ props.row.edited }}</span>
                                         </el-form-item>
                                         <el-form-item label="Url">
                                             <a v-bind:href="props.row.url">{{ props.row.url }}</a>
+                                        </el-form-item>
+                                        <el-form-item label="Residents">
+                                            <ul>
+                                                <li v-for="resident in props.row.residents">
+                                                    <a v-bind:href="resident">{{ resident }}</a>
+                                                </li>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="Films">
+                                            <ul>
+                                                <li v-for="film in props.row.films">
+                                                    <a v-bind:href="film">{{ film }}</a>
+                                                </li>
+                                            </ul>
                                         </el-form-item>
                                     </el-form>
                                 </el-table-column>
