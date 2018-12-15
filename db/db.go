@@ -225,43 +225,47 @@ func insertFunction(str1 string, str2 string, bucketName string) {
 }
 
 // 修改密码
-func changePassword(username string, newPassword string){
+func ChangePassword(username string, newPassword string) {
 	insertFunction(username, newPassword, "password")
 }
+
 // 修改邮箱
-func changeEmail(username string, email string){
+func ChangeEmail(username string, email string) {
 	insertFunction(username, email, "email")
 }
+
 // 查询用户
-func queryUser(username string)[2]string{
-	var result[2] string
-	result[0] = queryInformation(username, "password");
-	result[1] = queryInformation(username, "email");
+func QueryUser(username string) [2]string {
+	var result [2]string
+	result[0] = queryInformation(username, "password")
+	result[1] = queryInformation(username, "email")
 	return result
 }
+
 // 插入用户
-func insertUser(username string, password string, email string){
+func InsertUser(username string, password string, email string) {
 	insertFunction(username, password, "password")
 	insertFunction(username, email, "email")
 }
+
 // 判断一个用户是否存在
-func isExist(username string)bool{
+func IsExist(username string) bool {
 	var isexist bool
 	isexist = false
 	db, err := bolt.Open("db/my.db", 0600, nil)
 	//fmt.Println("5")
-    if err != nil {
-        log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
 	}
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("password")) //这个桶必须存在！！！
 		b.ForEach(func(k, v []byte) error {
-			if string(k[:]) == username{
+			if string(k[:]) == username {
 				isexist = true
 			}
-		return nil
+			return nil
 		})
-	return nil
+		return nil
 	})
 	defer db.Close()
 	return isexist
