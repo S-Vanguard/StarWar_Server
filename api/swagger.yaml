@@ -254,7 +254,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "user"
+        name: "userNew"
         required: false
         schema:
           $ref: "#/definitions/user"
@@ -273,7 +273,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "user"
+        name: "userSignIn"
         required: false
         schema:
           $ref: "#/definitions/user_1"
@@ -292,7 +292,7 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "user"
+        name: "userUpdate"
         required: false
         schema:
           $ref: "#/definitions/user_2"
