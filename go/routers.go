@@ -154,6 +154,13 @@ var routes = Routes{
 	},
 
 	Route{
+		"UserGetPost",
+		strings.ToUpper("Get"),
+		"/user/get",
+		UserGetPost,
+	},
+
+	Route{
 		"VehiclesGet",
 		strings.ToUpper("Get"),
 		"/vehicles",

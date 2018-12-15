@@ -317,6 +317,20 @@ paths:
             \ in yet\"\n}\n```\n"
           schema:
             $ref: "#/responses/UserOpeSucc"
+  /user/get:
+    post:
+      description: "获取当前登录用户，若无用户登陆，则返回错误信息"
+      produces:
+      - "application/json"
+      parameters: []
+    responses:
+      200:
+        description: "成功获取的响应信息：\n```\n{\n  \"status\": \"OK\"\n\
+        \"username\": \"User1\",\n\"email\": \"1179830039@qq.com\"\n}\n```\n\
+        获取失败的响应信息：\n```\n{\n  \"status\": \"Failed\",\n  \"message\": \
+        "You've not signed\ in yet\"\n}\n```\n"
+        schema:
+          $ref: "#/responses/UserOpeSucc"
 definitions:
   planets:
     allOf:
@@ -1535,7 +1549,7 @@ definitions:
         format: "url"
         description: "当前资源的URL\n"
     description: "记录的修改信息\n"
-  user:
+  userNew:
     type: "object"
     required:
     - "email"
@@ -1551,7 +1565,7 @@ definitions:
       email:
         type: "string"
         description: "申请注册的邮箱地址\n"
-  user_1:
+  userSignIn:
     type: "object"
     required:
     - "password"
@@ -1563,7 +1577,7 @@ definitions:
       password:
         type: "string"
         description: "尝试登陆的用户密码\n"
-  user_2:
+  userUpdate:
     type: "object"
     required:
     - "email"
