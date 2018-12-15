@@ -94,7 +94,7 @@ func UserSignInPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if session.Values["username"] == nil {
+		if session.Values["username"] != nil {
 			resBytes, err = resFailedBytes("You've signed in")
 		} else {
 			email := db.QueryUser(user.Username)[1]
