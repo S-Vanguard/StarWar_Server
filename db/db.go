@@ -8,32 +8,36 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-
-func GetPlanetsByPage(page int)[10]string{
+func GetPlanetsByPage(page int) [10]string {
 	return traversalAndFetch("planets", (page-1)*10)
 }
 
-func GetStarshipByPage(page int)[10]string{
+func GetStarshipsByPage(page int) [10]string {
 	return traversalAndFetch("starships", (page-1)*10)
 }
-func GetFilmByPage(page int)[10]string{
+
+func GetFilmsByPage(page int) [10]string {
 	return traversalAndFetch("films", (page-1)*10)
 }
-func GetSpeciesByPage(page int)[10]string{
+
+func GetSpeciesByPage(page int) [10]string {
 	return traversalAndFetch("species", (page-1)*10)
 }
-func GetVehiclesByPage(page int)[10]string{
+
+func GetVehiclesByPage(page int) [10]string {
 	return traversalAndFetch("vehicles", (page-1)*10)
 }
-func GetPeopleByPage(page int)[10]string{
+
+func GetPeopleByPage(page int) [10]string {
 	return traversalAndFetch("people", (page-1)*10)
 }
-func traversalAndFetch(bucketName string, firstItem int)[10]string{
-	var result[10] string
-	db, err := bolt.Open("my.db", 0600, nil)
+
+func traversalAndFetch(bucketName string, firstItem int) [10]string {
+	var result [10]string
+	db, err := bolt.Open("db/my.db", 0600, nil)
 	//fmt.Println("5")
-    if err != nil {
-        log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
 	}
 	var count int
 	var number int
@@ -42,14 +46,14 @@ func traversalAndFetch(bucketName string, firstItem int)[10]string{
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName)) //这个桶必须存在！！！
 		b.ForEach(func(k, v []byte) error {
-		if count < 10 && number >= firstItem{
-			result[count] = string(v[:])
-			count++
-		}
-		number++
-		return nil
+			if count < 10 && number >= firstItem {
+				result[count] = string(v[:])
+				count++
+			}
+			number++
+			return nil
 		})
-	return nil
+		return nil
 	})
 	defer db.Close()
 	return result
