@@ -10,89 +10,288 @@
 package swagger
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+
+	db "github.com/S-Vanguard/StarWar_Server/db"
+	"github.com/S-Vanguard/StarWar_Server/go/apiType"
+	sessions "github.com/gorilla/sessions"
 )
+
+var store *sessions.CookieStore
+
+func init() {
+	secureKey := make([]byte, 10)
+	_, err := rand.Read(secureKey)
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	store = sessions.NewCookieStore(secureKey)
+}
 
 func UserLogoutPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
-	// TODO
+	session, err := store.Get(r, "info")
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	var resBytes []byte
+	if session.Values["username"] == nil {
+		resBytes, err = resFailedBytes("You've not signed in yet")
+	} else {
+		delete(session.Values, "username")
+		delete(session.Values, "email")
+
+		resBytes, err = resOKBytes()
+	}
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	// 返回结果
+	_, err = w.Write(resBytes)
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func UserSignInPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
-	var user UserSignIn
-	var b []byte
+	var user apiType.UserSignIn
+	var resBytes []byte
 	var err error
-	b, err = ioutil.ReadAll(r.Body)
+	resBytes, err = ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
-	err = json.Unmarshal(b, &user)
+	err = json.Unmarshal(resBytes, &user)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
 
-	// TODO
-	fmt.Println(user.Username)
-	fmt.Println(user.Password)
+	if !db.IsExist(user.Username) {
+		resBytes, err = resFailedBytes("The user doesn't exist.")
+	} else if oldPwd := db.QueryUser(user.Username)[0]; oldPwd != user.Password {
+		resBytes, err = resFailedBytes("Invalid password.")
+	} else {
+		// correct password
+		session, err := store.Get(r, "info")
+		if err != nil {
+			assertFalse(w, err)
+			return
+		}
+
+		if session.Values["username"] == nil {
+			resBytes, err = resFailedBytes("You've signed in")
+		} else {
+			email := db.QueryUser(user.Username)[1]
+
+			session.Values["username"] = user.Username
+			session.Values["email"] = email
+
+			resBytes, err = resOKBytes()
+		}
+	}
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	// 返回结果
+	_, err = w.Write(resBytes)
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func UserSignUpPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
-	var user UserNew
-	var b []byte
+	var user apiType.UserNew
+	var resBytes []byte
 	var err error
-	b, err = ioutil.ReadAll(r.Body)
+	resBytes, err = ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
-	err = json.Unmarshal(b, &user)
+	err = json.Unmarshal(resBytes, &user)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
 
-	// TODO
-	fmt.Println(user.Username)
-	fmt.Println(user.Password)
-	fmt.Println(user.Email)
+	if db.IsExist(user.Username) {
+		resBytes, err = resFailedBytes("This username has been occupied.")
+	} else if !isValidUsername(user.Username) {
+		resBytes, err = resFailedBytes("Invalid username format.")
+	} else if !isValidPassword(user.Password) {
+		resBytes, err = resFailedBytes("Invalid password format.")
+	} else if !isValidEmail(user.Email) {
+		resBytes, err = resFailedBytes("Invalid email format.")
+	} else {
+		db.InsertUser(user.Username, user.Password, user.Email)
+		resBytes, err = json.Marshal(apiType.StatusOnly{
+			Status: "OK",
+		})
+	}
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	// 返回结果
+	_, err = w.Write(resBytes)
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func UserUpdatePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
-	var user UserUpdate
-	var b []byte
+	var user apiType.UserUpdate
+	var resBytes []byte
 	var err error
-	b, err = ioutil.ReadAll(r.Body)
+	resBytes, err = ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
-	err = json.Unmarshal(b, &user)
+	err = json.Unmarshal(resBytes, &user)
 	if err != nil {
-		fmt.Println(err)
+		assertFalse(w, err)
+		return
 	}
 
-	// TODO
-	fmt.Println(user.Username)
-	fmt.Println(user.Password)
-	fmt.Println(user.OldPassword)
-	fmt.Println(user.Email)
+	if !db.IsExist(user.Username) {
+		resBytes, err = resFailedBytes("The user doesn't exist.")
+	} else if oldPwd := db.QueryUser(user.Username)[0]; oldPwd != user.Password {
+		resBytes, err = resFailedBytes("Invalid password.")
+	} else {
+		// correct password
+		// ======================
+		// change password
+		if len(user.Password) != 0 {
+			if isValidPassword(user.Password) {
+				db.ChangePassword(user.Username, user.Password)
+				resBytes, err = resOKBytes()
+			} else {
+				resBytes, err = resFailedBytes("Invalid password format.")
+			}
+		}
+		if err != nil {
+			assertFalse(w, err)
+			return
+		}
+		// change email
+		if len(user.Email) != 0 {
+			if isValidEmail(user.Email) {
+				db.ChangeEmail(user.Username, user.Email)
+				resBytes, err = resOKBytes()
+			} else {
+				resBytes, err = resFailedBytes("Invalid email format.")
+			}
+		}
+	}
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	// 返回结果
+	_, err = w.Write(resBytes)
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 
 }
 
 func UserGetPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 
-	// TODO
+	session, err := store.Get(r, "info")
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	var resBytes []byte
+	if session.Values["username"] == nil {
+		resBytes, err = resFailedBytes("You've not signed in yet")
+	} else {
+		var username string = session.Values["username"].(string)
+		var email string = session.Values["email"].(string)
+
+		resBytes, err = json.Marshal(apiType.UserInfo{
+			Status:   "OK",
+			Username: username,
+			Email:    email,
+		})
+	}
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+
+	// 返回结果
+	_, err = w.Write(resBytes)
+	if err != nil {
+		assertFalse(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+// =================================================================
+// auxiliary
+
+func resOKBytes() ([]byte, error) {
+	return json.Marshal(apiType.StatusOnly{
+		Status: "OK",
+	})
+}
+
+func resFailedBytes(message string) ([]byte, error) {
+	return json.Marshal(apiType.FailInfo{
+		Status:  "Failed",
+		Message: message,
+	})
+}
+
+func assertFalse(w http.ResponseWriter, err error) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(err.Error()))
+	log.Println(err)
+}
+
+func isValidUsername(username string) bool {
+	return true
+}
+
+func isValidPassword(password string) bool {
+	return true
+}
+
+func isValidEmail(email string) bool {
+	return true
 }
