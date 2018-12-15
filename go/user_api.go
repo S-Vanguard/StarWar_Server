@@ -14,16 +14,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/boltdb/bolt"
 )
-
-var db *bolt.DB
-
-func init() {
-	var err error
-	db, err = bolt.Open("db/user.db", 0600, nil)
-}
 
 func UserLogoutPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
