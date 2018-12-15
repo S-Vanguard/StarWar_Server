@@ -43,7 +43,8 @@ func NewRouter() *mux.Router {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-
+	// todo: if login => swapi.html else index.html
+	http.Redirect(w, r, "html", http.StatusFound)
 }
 
 var routes = Routes{
