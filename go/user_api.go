@@ -50,6 +50,8 @@ func UserLogoutPost(w http.ResponseWriter, r *http.Request) {
 		delete(session.Values, "username")
 		delete(session.Values, "email")
 
+		session.Save(r, w)
+
 		resBytes, err = resOKBytes()
 	}
 	if err != nil {
@@ -101,6 +103,8 @@ func UserSignInPost(w http.ResponseWriter, r *http.Request) {
 
 			session.Values["username"] = user.Username
 			session.Values["email"] = email
+
+			session.Save(r, w)
 
 			resBytes, err = resOKBytes()
 		}
