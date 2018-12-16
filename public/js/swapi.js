@@ -133,7 +133,7 @@ let api = new Vue({
                 default:
                     this.apiType = 0;
             }
-            if (this.jsonSource.count != undefined) {
+            if (JSON.parse(this.jsonSource).count !== undefined) {
                 // Parse Page of Objects //
                 this.parsedJSONTable = JSON.parse(this.jsonSource).results;
             }
