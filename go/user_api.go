@@ -186,8 +186,9 @@ func UserUpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !db.IsExist(user.Username) {
+		println(user.Username)
 		resBytes, err = resFailedBytes("The user doesn't exist.")
-	} else if oldPwd := db.QueryUser(user.Username)[0]; oldPwd != user.Password {
+	} else if oldPwd := db.QueryUser(user.Username)[0]; oldPwd != user.OldPassword {
 		resBytes, err = resFailedBytes("Invalid password.")
 	} else {
 		// correct password
