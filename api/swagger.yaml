@@ -318,7 +318,7 @@ paths:
           schema:
             $ref: "#/responses/UserOpeSucc"
   /user/get:
-    post:
+    get:
       description: "获取当前登录用户，若无用户登陆，则返回错误信息"
       produces:
       - "application/json"
