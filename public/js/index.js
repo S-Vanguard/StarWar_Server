@@ -17,50 +17,62 @@ let main = new Vue({
                 this.$message.error(errorMessage);
                 return;
             }
+            let vueInstance = this;
             if (this.isSignUp === true) {
                 axios.post('/user/signUp', {
-                    username: this.form.username,
-                    password: this.form.password,
-                    email: this.form.email
+                    username: vueInstance.form.username,
+                    password: vueInstance.form.password,
+                    email: vueInstance.form.email
                 })
                 .then(function (response) {
                     if (response.data.status === "OK") {
-                        this.$message.success("Signed up successfully");
-                        this.isSignUp = false;
+                        vueInstance.$message.success("Signed up successfully");
+                        vueInstance.isSignUp = false;
                     } else {
                         if (response.data.message !== undefined) {
-                            this.$message.error(response.data.message);
+                            vueInstance.$message.error(response.data.message);
                         } else {
-                            this.$message.error('Unknown error');
+                            vueInstance.$message.error('Unknown error');
                         }
                     }
                 })
                 .catch(function (error) {
-                    this.$message.error('Connection failed: server does not response');
-                    console.log(error)
+                    if (error.response) {
+                        vueInstance.$message.error('Connection failed: ' + error.response.statusText);
+                    }
+                    else {
+                        vueInstance.$message.error('Connection failed: unknown error');
+                    }
+                    console.log(error);
                 });
             }
             else {
                 axios.post('/user/signIn', {
-                    username: this.form.username,
-                    password: this.form.password
+                    username: vueInstance.form.username,
+                    password: vueInstance.form.password
                 })
                 .then(function (response) {
                     if (response.data.status === "OK") {
-                        this.$message.success("Signed in successfully");
+                        vueInstance.$message.success("Signed in successfully");
                         setTimeout(()=>{
                             window.location.href = "/html/swapi.html";
                         }, 3000)
                     } else {
                         if (response.data.message !== undefined) {
-                            this.$message.error(response.data.message);
+                            vueInstance.$message.error(response.data.message);
                         } else {
-                            this.$message.error('Unknown error');
+                            vueInstance.$message.error('Unknown error');
                         }
                     }
                 })
                 .catch(function (error) {
-                    this.$message.error('Connection failed: server does not response');
+                    if (error.response) {
+                        vueInstance.$message.error('Connection failed: ' + error.response.statusText);
+                    }
+                    else {
+                        vueInstance.$message.error('Connection failed: unknown error');
+                    }
+                    console.log(error);
                 });
             }
         },

@@ -22,12 +22,21 @@
                     <el-col :span="2">
                         <img class="header" src="../img/logo.png">
                     </el-col>
-                    <el-col :span="3">
+                    <el-col :span="3" style="width: auto;" >
                         <p v-if="username === ''">
                             <el-button round type="primary" @click="toIndex">Sign Up</el-button>
                         </p>
                         <p v-else>
-                            Welcome, <span class="user" @click="toProfile">{{ username }}</span>
+                            Welcome, 
+                            <el-dropdown @command="handleCommand">
+                                <span class="el-dropdown-link">
+                                    <span class="user" @click="toProfile" style="margin-left: 5px; font-size: 22px; cursor: pointer; font-style: initial;">{{ username }}</span><i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                  <el-dropdown-item command="profile">Profile</el-dropdown-item>
+                                  <el-dropdown-item command="logout">Logout</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </p>
                     </el-col>
                 </el-row>

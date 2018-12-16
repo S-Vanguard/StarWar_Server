@@ -12,22 +12,23 @@ let profile = new Vue({
         },
         isMailChanged: false,
     },
-    created: function() {
+    mounted: function() {
+        let vueInstance = this;
         axios.get('/user/get')
         .then(function(res) {
             if (res.data.status === 'OK') {
-                this.form.username = res.data.username;
-                this.form.email = res.data.email;
+                vueInstance.form.username = res.data.username;
+                vueInstance.form.email = res.data.email;
             } else {
                 if (res.data.message != undefined) {
-                    this.$message.error(res.data.message);
+                    vueInstance.$message.error(res.data.message);
                 } else {
-                    this.$message.error('Unknown error');
+                    vueInstance.$message.error('Unknown error');
                 }
             }
         })
         .catch(function (err) {
-            this.$message.error('Connection failed: server does not response');
+            vueInstance.$message.error('Connection failed: server does not response');
             console.log(err)
         });
     },
@@ -41,25 +42,26 @@ let profile = new Vue({
                 this.$message.error(errMsg);
                 return;
             }
+            let vueInstance = this;
             axios.post('/user/update', {
-                username: this.form.username,
-                oldPassword: this.form.oldPsd,
-                password: this.form.password,
-                email: this.isMailChanged ? this.form.email : ''
+                username: vueInstance.form.username,
+                oldPassword: vueInstance.form.oldPsd,
+                password: vueInstance.form.password,
+                email: vueInstance.isMailChanged ? vueInstance.form.email : ''
             })
             .then(function (res) {
                 if (res.data.status === 'OK') {
-                    this.$message.success('Update profile successfully');
+                    vueInstance.$message.success('Update profile successfully');
                 } else {
                     if (res.data.message !== undefined) {
-                        this.$message.error(res.data.message);
+                        vueInstance.$message.error(res.data.message);
                     } else {
-                        this.$message.error('Unknown error');
+                        vueInstance.$message.error('Unknown error');
                     }
                 } 
             })
             .catch(function (err) {
-                this.$message.error('Connection failed: server does not response');
+                vueInstance.$message.error('Connection failed: server does not response');
                 console.log(err)
             });
         },

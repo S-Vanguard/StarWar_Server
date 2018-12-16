@@ -75,6 +75,49 @@ let api = new Vue({
                     });
             }
         },
+        logout: function() {
+            let vueInstance = this;
+            axios.post('/user/logout')
+                .then(function(response) {
+                    if (response.status != 200) {
+                        vueInstance.$message.error('Incorrect status, please try again');
+                        return;
+                    }
+
+                    if (response.data.status === "OK") {
+                        vueInstance.$message.success("Successfully logout")
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 3000)
+                    } else if (response.data.status === "Failed") {
+                        vueInstance.$message.error(response.data.message);
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 3000)
+                    } else {
+                        vueInstance.$message.error('Unknown error, please try again');
+                    }
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        vueInstance.$message.error('Connection failed: ' + error.response.statusText);
+                    }
+                    else {
+                        vueInstance.$message.error('Connection failed: Unknown error');
+                    }
+                    console.log(error);
+                });
+        },
+        handleCommand: function(command) {
+            switch(command) {
+                case 'profile':
+                    this.toProfile();
+                    break;
+                case 'logout':
+                    this.logout();
+                    break;
+            }
+        },
         parseJSON: function () {
             let apiTypeKey = this.input.split('/')[0];
             switch(apiTypeKey) {
@@ -106,32 +149,38 @@ let api = new Vue({
      },
     mounted: function () {
         // Waiting for account module //
-
-        // axios.post('/user/get', {})
-        //     .then(function (response) {
-        //         if (response.data.status === 'OK' && response.data.username !== undefined) {
-        //             this.$message.success('Welcome, ' + response.data.username);
-        //             this.username = response.data.username;
-        //             loadingUser = false;
-        //         }
-        //         else if (response.data.status === "Failed" && response.data.message !== undefined) {
-        //             this.$message.success('Welcome, visitor');
-        //             this.username = '';
-        //             loadingUser = false;
-        //         }
-        //         else {
-        //             this.$message.error('Unknown error, try refreshing this page');
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         this.$message.error('Connection failed: server does not response');
-        //         console.log(error)
-        //     })
+        let vueInstance = this;
+        axios.get('/user/get')
+            .then(function (response) {
+                if (response.data.status === 'OK' && response.data.username !== undefined) {
+                    vueInstance.$message.success('Welcome, ' + response.data.username);
+                    vueInstance.username = response.data.username;
+                    vueInstance.loadingUser = false;
+                }
+                else if (response.data.status === "Failed" && response.data.message !== undefined) {
+                    vueInstance.$message.success('Welcome, visitor');
+                    vueInstance.username = '';
+                    vueInstance.loadingUser = false;
+                }
+                else {
+                    vueInstance.$message.error('Unknown error, try refreshing this page');
+                }
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    vueInstance.$message.error('Connection failed: ' + error.response.statusText);
+                }
+                else {
+                    vueInstance.$message.error('Connection failed: Unknown error');
+                }
+                vueInstance.username = '';
+                console.log(error)
+            });
 
         // test module //
 
-        this.$message.success('Welcome, visitor');
-        this.username = '';
-        this.loadingUser = false;
+        // this.$message.success('Welcome, visitor');
+        // this.username = '123';
+        // this.loadingUser = false;
     }
 });
