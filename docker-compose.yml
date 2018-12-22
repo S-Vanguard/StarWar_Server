@@ -2,6 +2,21 @@ version: "3"
 services:
   web:
     # replace username/repo:tag with your name and image details
+    image: starwarclient
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+    ports:
+      - "8888:8888"
+    networks:
+      - webnet
+  server:
+    # replace username/repo:tag with your name and image details
     image: gitgiter/test:1.0
     deploy:
       replicas: 5
