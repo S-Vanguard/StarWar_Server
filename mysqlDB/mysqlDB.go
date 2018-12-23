@@ -10,11 +10,12 @@ import (
 )
 
 const (
-	DB_Driver = "root:123456@tcp(127.0.0.1:3306)/starWar?charset=utf8"
+	DB_Driver = "root:123456@tcp(192.168.134.129:3306)/starWar?charset=utf8"
 )
 
 func OpenDB() (success bool, db *sql.DB) {
 	var isOpen bool
+	fmt.Println(DB_Driver)
 	db, err := sql.Open("mysql", DB_Driver)
 	if err != nil {
 		isOpen = false

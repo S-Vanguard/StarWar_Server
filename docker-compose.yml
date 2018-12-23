@@ -2,7 +2,7 @@ version: "3"
 services:
   web:
     # replace username/repo:tag with your name and image details
-    image: starwarclient
+    image: gitgiter/web:3.0
     deploy:
       replicas: 1
       restart_policy:
@@ -17,7 +17,7 @@ services:
       - webnet
   server:
     # replace username/repo:tag with your name and image details
-    image: gitgiter/test:1.0
+    image: starwar-server
     deploy:
       replicas: 5
       restart_policy:
@@ -32,7 +32,7 @@ services:
       - webnet
   db:
     # replace username/repo:tag with your name and image details
-    image: kira6/starwarsql:1.0
+    image: kira6/starwarsql:2.0
     deploy:
       replicas: 1
       restart_policy:
