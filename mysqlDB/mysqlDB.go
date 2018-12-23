@@ -1,63 +1,43 @@
-package main
+package swagger
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 	"strconv"
-	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/360EntSecGroup-Skylar/excelize"
+	_ "github.com/go-sql-driver/mysql"
 )
-func main(){
-	//fmt.Println(GetPlanetByID(1))
-	//fmt.Println(GetPlanetsByPage(1))
-	// var result [10]string
-	// result = GetPlanetsByPage(1)
-	// for a:=0 ; a<10;a++{
-	// 	fmt.Println(result[a])
-	// }
-	//UpdateDB("user1", "xiongzj@gmail.com", "email")
-	//fmt.Println(QueryUserFromDB("user1"))
-	//insertUserToDB("test1", "123456", "347964202@qq.com")
-	//fmt.Println(IsExist("test1"))
-	//fmt.Println(IsExist("test2"))
-	fmt.Println(GetPlanetByID("1"))
-}
+
 const (
-    DB_Driver = "root:123456@tcp(127.0.0.1:3306)/starWar?charset=utf8"
+	DB_Driver = "root:123456@tcp(127.0.0.1:3306)/starWar?charset=utf8"
 )
 
 func OpenDB() (success bool, db *sql.DB) {
-    var isOpen bool
-    db, err := sql.Open("mysql", DB_Driver)
-    if err != nil {
-        isOpen = false
-    } else {
-        isOpen = true
-    }
-    CheckErr(err)
-    return isOpen, db
-}
-func CheckErr(err error) {
-    if err != nil {
-        fmt.Println("操作失败")
-    }
+	var isOpen bool
+	db, err := sql.Open("mysql", DB_Driver)
+	if err != nil {
+		isOpen = false
+	} else {
+		isOpen = true
+	}
+	return isOpen, db
 }
 
-func QueryFromDB(tableName string, index int) string{
+func QueryFromDB(tableName string, index int) string {
 	opend, db := OpenDB()
 	var id int
 	var information string
-	if opend{
+	if opend {
 		rows, err := db.Query("SELECT * FROM " + tableName + " where id=" + strconv.Itoa(index))
-    	CheckErr(err)
-    	if err != nil {
-        	fmt.Println("查询失败")
+		if err != nil {
+			fmt.Println(err)
+			return ""
 		}
-    	for rows.Next() {
-        	CheckErr(err)
+		for rows.Next() {
 			err = rows.Scan(&id, &information)
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	//fmt.Println("test is:" + test)
@@ -65,23 +45,24 @@ func QueryFromDB(tableName string, index int) string{
 	return information
 }
 
-func insertToDB(tableName string, str1 string, str2 string){
+func insertToDB(tableName string, str1 string, str2 string) {
 	opend, db := OpenDB()
-	if opend{
-		stmt, err := db.Prepare("insert " + tableName + " set id=?,information=?")
+	if opend {
+		stmt, _ := db.Prepare("insert " + tableName + " set id=?,information=?")
 		var id int
-		id,err = strconv.Atoi(str1) 
+		id, _ = strconv.Atoi(str1)
 		res, err := stmt.Exec(id, str2)
-		index,err := res.LastInsertId()
+		index, _ := res.LastInsertId()
 		var temp int64
 		temp = index
 		temp++
 		if err != nil {
 			fmt.Println("插入数据失败")
+			fmt.Println(err)
 		} else {
 			fmt.Println("插入数据成功")
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()
@@ -190,8 +171,7 @@ func initDB() {
 	}
 }
 
-
-func GetPage(tableName string, firstItem int) [10]string{
+func GetPage(tableName string, firstItem int) [10]string {
 	opend, db := OpenDB()
 	var count int
 	var number int
@@ -200,7 +180,7 @@ func GetPage(tableName string, firstItem int) [10]string{
 	var result [10]string
 	count = 0
 	number = 0
-	if opend{
+	if opend {
 		rows, err := db.Query("SELECT * FROM " + tableName)
 		if err != nil {
 			fmt.Println("查询失败")
@@ -213,58 +193,56 @@ func GetPage(tableName string, firstItem int) [10]string{
 			}
 			number++
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()
 	return result
 }
 
-func QueryUserFromDB(user string) [2]string{
+func QueryUserFromDB(user string) [2]string {
 	opend, db := OpenDB()
 	var result [2]string
 	var username string
 	var password string
 	var email string
-	if opend{
+	if opend {
 		rows, err := db.Query("SELECT * FROM USER")
-    	//CheckErr(err)
-    	if err != nil {
-        	fmt.Println("查询失败")
+		if err != nil {
+			fmt.Println("查询失败")
 		}
-    	for rows.Next() {
-        	//CheckErr(err)
-			err = rows.Scan(&username, &password,&email)
-			if username == user{
+		for rows.Next() {
+			err = rows.Scan(&username, &password, &email)
+			if username == user {
 				result[0] = password
 				result[1] = email
 				break
 			}
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()
 	return result
 }
+
 func UpdateDB(username string, changeAttr string, attrName string) {
-	opend,db := OpenDB()
-	if opend{
-		stmt, err := db.Prepare("update USER set " + attrName + "=? where username=?")
-		CheckErr(err)
-		res, err := stmt.Exec(changeAttr, username)
-		affect, err := res.RowsAffected()
+	opend, db := OpenDB()
+	if opend {
+		stmt, _ := db.Prepare("update USER set " + attrName + "=? where username=?")
+		res, _ := stmt.Exec(changeAttr, username)
+		affect, _ := res.RowsAffected()
 		fmt.Println("更新数据：", affect)
-		CheckErr(err)
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()
 }
+
 //------------------------------------------------------------------------------------------------------------------
 func GetPlanetByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	//fmt.Println(temp)
@@ -272,40 +250,40 @@ func GetPlanetByID(id string) string {
 }
 
 func GetStarshipByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	return QueryFromDB("starships", temp)
 }
 
 func GetFilmByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	return QueryFromDB("films", temp)
 }
 
 func GetSpeciesByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	return QueryFromDB("species", temp)
 }
 
 func GetVehicleByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	return QueryFromDB("vehicles", temp)
 }
 
 func GetPeopleByID(id string) string {
-	temp,err:=strconv.Atoi(id)
-	if err != nil{
+	temp, err := strconv.Atoi(id)
+	if err != nil {
 		fmt.Println(" 操作失败")
 	}
 	return QueryFromDB("people", temp)
@@ -336,25 +314,26 @@ func GetPeopleByPage(page int) [10]string {
 }
 
 // 插入用户
-func insertUser(username string, password string, email string){
+func insertUser(username string, password string, email string) {
 	opend, db := OpenDB()
-	if opend{
-		stmt, err := db.Prepare("insert USER set username=?, password=?, email=?")
+	if opend {
+		stmt, _ := db.Prepare("insert USER set username=?, password=?, email=?")
 		res, err := stmt.Exec(username, password, email)
-		index,err := res.LastInsertId()
+		index, _ := res.LastInsertId()
 		var temp int64
 		temp = index
 		temp++
-		if err != nil{
+		if err != nil {
 			fmt.Println("数据插入失败")
-		} else{
+		} else {
 			fmt.Println("数据插入成功")
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()
 }
+
 // 查询用户
 func QueryUser(username string) [2]string {
 	return QueryUserFromDB(username)
@@ -378,19 +357,19 @@ func IsExist(user string) bool {
 	var username string
 	var password string
 	var email string
-	if opend{
+	if opend {
 		rows, err := db.Query("SELECT * FROM USER")
-		if err != nil{
-			fmt.Println("查询失败")
+		if err != nil {
+			fmt.Println(err)
 		}
 		for rows.Next() {
 			err = rows.Scan(&username, &password, &email)
-			if user == username{
+			if user == username {
 				isexist = true
 				break
 			}
 		}
-	} else{
+	} else {
 		fmt.Println("open database failed")
 	}
 	defer db.Close()

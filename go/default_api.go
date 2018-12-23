@@ -16,7 +16,8 @@ import (
 	"strconv"
 	"strings"
 
-	db "github.com/S-Vanguard/StarWar_Server/db"
+	// db "github.com/S-Vanguard/StarWar_Server/db"
+	db "github.com/S-Vanguard/StarWar_Server/mysqlDB"
 )
 
 func FilmsGet(w http.ResponseWriter, r *http.Request) {
