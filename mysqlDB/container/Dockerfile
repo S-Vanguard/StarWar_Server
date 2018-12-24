@@ -31,3 +31,4 @@ COPY setup.sh $AUTO_RUN_DIR/
 
 #给执行文件增加可执行权限
 RUN chmod a+x $AUTO_RUN_DIR/setup.sh
+#RUN bash $AUTO_RUN_DIR/setup.sh

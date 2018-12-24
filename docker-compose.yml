@@ -2,7 +2,7 @@ version: "3"
 services:
   web:
     # replace username/repo:tag with your name and image details
-    image: gitgiter/web:3.0
+    image: gitgiter/web:4.0
     deploy:
       replicas: 1
       restart_policy:
@@ -17,9 +17,9 @@ services:
       - webnet
   server:
     # replace username/repo:tag with your name and image details
-    image: starwar-server
+    image: gitgiter/test:4.0
     deploy:
-      replicas: 5
+      replicas: 1
       restart_policy:
         condition: on-failure
       resources:
@@ -40,9 +40,12 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: 50M
+          memory: 300M
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      PMA_HOST: mysql
     networks:
       - webnet
   visualizer:
